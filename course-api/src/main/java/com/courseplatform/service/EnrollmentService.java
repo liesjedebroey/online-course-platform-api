@@ -15,7 +15,7 @@ public class EnrollmentService {
 
     public Enrollment enrollStudent(Enrollment enrollment){
         //Requirement: check if student is already enrolled in this course
-        boolean alreadyEnrolled = enrollmentRepository.existsByStudentIdAndCourseId(
+        boolean alreadyEnrolled = enrollmentRepository.existsByStudent_IdAndCourse_Id(
                 enrollment.getStudent().getId(),
                 enrollment.getCourse().getId()
         );

@@ -9,12 +9,12 @@ import java.util.List;
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment,Long>{
     //Used for students to see their own course enrollments
-    List<Enrollment> findByStudentId(Long studentId);
+    List<Enrollment> findByStudent_Id(Long studentId);
 
     //Used for instructors to se enrollments for their specific courses
-    List<Enrollment> findByInstructorId(Long instructorId);
+    List<Enrollment> findByCourse_Instructor_Id(Long instructorId);
 
     //Important: check for duplicate enrollments before saving
-    boolean existsByStudentIdAndCourseId(Long studentId, Long courseId);
+    boolean existsByStudent_IdAndCourse_Id(Long studentId, Long courseId);
 
 }
