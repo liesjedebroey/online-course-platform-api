@@ -4,39 +4,39 @@ import com.courseplatform.dto.CourseRequest;
 import com.courseplatform.dto.CourseResponse;
 import com.courseplatform.service.CourseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/courses")
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Zorg dat je de Lombok dependency hebt, anders handmatige constructor maken
 public class CourseController {
 
     private final CourseService courseService;
 
-    // Public endpoint - anyone can view courses
+    // GET /api/courses?page=0&size=10&sort=title,asc
     @GetMapping
-    public ResponseEntity<List<CourseResponse>> getAllCourses() {
-        return ResponseEntity.ok(courseService.getAllCourses());
+    public ResponseEntity<Page<CourseResponse>> getAllCourses(
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(courseService.getAllCourses(pageable));
     }
 
-    // Public endpoint - anyone can view a specific course
     @GetMapping("/{id}")
     public ResponseEntity<CourseResponse> getCourseById(@PathVariable Long id) {
         return ResponseEntity.ok(courseService.getCourseById(id));
     }
 
-    // Only INSTRUCTOR or ADMIN can create courses
     @PostMapping
     @PreAuthorize("hasAnyRole('INSTRUCTOR', 'ADMIN')")
     public ResponseEntity<CourseResponse> createCourse(@RequestBody CourseRequest request) {
         return ResponseEntity.ok(courseService.createCourse(request));
     }
 
-    // INSTRUCTOR (own course) or ADMIN can update
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('INSTRUCTOR', 'ADMIN')")
     public ResponseEntity<CourseResponse> updateCourse(
@@ -45,7 +45,6 @@ public class CourseController {
         return ResponseEntity.ok(courseService.updateCourseById(id, request));
     }
 
-    // Only ADMIN can delete courses
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {

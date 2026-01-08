@@ -11,8 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+
 import java.util.stream.Collectors;
 
 @Service
@@ -22,10 +26,9 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
 
-    public List<CourseResponse> getAllCourses() {
-        return courseRepository.findAll().stream()
-                .map(this::mapToCourseResponse)
-                .collect(Collectors.toList());
+    public Page<CourseResponse> getAllCourses(Pageable pageable) {
+        return courseRepository.findAll(pageable)
+                .map(this::mapToCourseResponse);
     }
 
     public CourseResponse getCourseById(Long id) {
