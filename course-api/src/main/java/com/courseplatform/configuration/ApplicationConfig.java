@@ -1,4 +1,4 @@
-package com.courseplatform.security;
+package com.courseplatform.configuration;
 
 import com.courseplatform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
